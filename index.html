@@ -1,0 +1,34 @@
+<html>
+
+<head>
+    <title>Bit - Javascript Image Uploader</title>
+    <script src="js/bit.js"></script>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bit.css">
+</head>
+
+<body class="bg-dark">
+
+    <div class="container bg-white mt-5 p-5">
+        <h1>Bit - Javascript Image Uploader</h1>
+        <p>Author: Zain Ali</p>
+        <div class="bit">
+            Upload here your files...
+        </div>
+        <div class="bit">
+            And also here...
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+       (function(){
+            window.bit = new Bit;
+            var bit = window.bit;
+            bit.check();
+        })();
+    </script>
+</body>
+
+</html>
