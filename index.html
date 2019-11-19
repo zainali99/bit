@@ -14,18 +14,21 @@
         <h1>Bit - Javascript Image Uploader</h1>
         <p>Author: Zain Ali</p>
         <div class="bit">
-            Upload here your files...
-        </div>
-        <div class="bit">
-            And also here...
+            test
         </div>
     </div>
 
-
     <script type="text/javascript">
-       (function(){
+        (function () {
             window.bit = new Bit;
             var bit = window.bit;
+            bit.subscribe('hello', data => {
+                alert('Hello World');
+            });
+            bit.subscribe('hello_private',data => {
+            console.log(data);
+            });
+
             bit.check();
         })();
     </script>
