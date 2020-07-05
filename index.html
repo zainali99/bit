@@ -2,6 +2,7 @@
 
 <head>
     <title>Bit - Javascript Image Uploader</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="js/bit.js"></script>
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css">
@@ -13,24 +14,31 @@
     <div class="container bg-white mt-5 p-5">
         <h1>Bit - Javascript Image Uploader</h1>
         <p>Author: Zain Ali</p>
-        <div class="bit">
-            test
-        </div>
+        <form method="post" enctype="multipart/form-data">
+            <h3>Select some files...</h3>
+            <small class="text-muted">...multiple files allowed here !</small>
+            <div class="bit">
+                <input name="photosContainer" type="file" multiple />
+            </div>
+            <div class="bit">
+                <input name="composition" type="file">
+            </div>
+            <p class="text-muted">... not allowed multiple files</p>
+            <input type="submit" id="test-submit-btn" class="btn btn-primary btn-sm">
+        </form>
     </div>
 
-    <script type="text/javascript">
-        (function () {
-            window.bit = new Bit;
-            var bit = window.bit;
-            bit.subscribe('hello', data => {
-                alert('Hello World');
-            });
-            bit.subscribe('hello_private',data => {
-            console.log(data);
-            });
 
-            bit.check();
-        })();
+    <script>
+        window.onload = () => {
+            const bit = new Bit();
+            bit.on('ciao', data => {
+                console.log(data);
+            });
+            bit.emit('ciao', {
+                'ciao': 1
+            });
+        }
     </script>
 </body>
 
