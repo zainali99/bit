@@ -9,6 +9,10 @@ bit is a mini javascript library that allows you to control the process of uploa
 - [ ] check files sent to server side
 - [ ] support multiple files
 
+# TODO before the next major release:
+- [ ] core: no duplicates files can be added
+- [ ] core: limit file size to 2mb as default
+- [ ] core: thumbnails !
 
 # Documentation
 TODO
