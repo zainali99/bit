@@ -40,13 +40,12 @@ class Bit extends EventEmitter {
     show_images(instance_elem, data) {
         var fr = new FileReader();
         fr.onload = function(){
-            // TODO: SUPPORT multiple files
-            console.log(fr)
-            instance_elem.innerHTML +='<div><img class="bit-images" src="' + fr.result + '" />';
-            instance_elem.innerHTML +='<p>' +data[0].name +'</p>';
-            instance_elem.innerHTML +='<p>' +data[0].type +'</p>';
-            instance_elem.innerHTML +='<p>' +data[0].lastModified +'</p></div>';
-            console.log(data)
+            let html = '';
+            for (var i=0; i<data.length;i++) {
+                let file = data[i];
+                html += '<div class="bit-filename">'+file.name+'</div>'
+            }
+            instance_elem.innerHTML += html;
         }
         fr.readAsDataURL(data[0]);
     }
@@ -73,8 +72,7 @@ class Bit extends EventEmitter {
                 console.log("[bit] max scanning instances reached");
                 return false;
             } 
-            c[i].innerHTML += 'Bit running on...' + document.domain + "<br>running some data test:";
-            c[i].innerHTML += this.slogan;
+            
             var file_elem = c[i].querySelector('input[type=file]');
             file_elem.onchange = function(event){
                 bit.show_images(this.parentElement,this.files)
