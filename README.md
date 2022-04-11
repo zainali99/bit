@@ -4,15 +4,12 @@ bit is a javascript image uploader
 bit is a mini javascript library that allows you to control the process of uploading and viewing images in a web-app
 
 ### TODO before first release 1.0
-- [x] show files selected
-- [x] limit scanning instances in html
-- [ ] check files sent to server side
-- [ ] support multiple files
+- [ ] Emit basic hooks: getFiles, etc
+- [ ] Use web-worker for reading files.
+
 
 # TODO before the next major release:
-- [ ] core: no duplicates files can be added
-- [ ] core: limit file size to 2mb as default
-- [ ] core: thumbnails !
+- [ ] Basic system of plugins
 
 # Documentation
 TODO

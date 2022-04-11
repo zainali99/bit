@@ -25,18 +25,33 @@ class EventEmitter {
         this.events[eventName].push(fn);
     }
 }
+
+
 /* Bit created by Zain Ali */
 class Bit extends EventEmitter {
-    constructor() {
+    constructor(element) {
         super();
+        this.id = `bit-${Math.random().toString(16).substring(2)}`;
+        this.log(element)
         this.version = "0.1";
         this.author = "Zain Ali";
         this.slogan = "Hobby project :D";
+        this.files = [];
+        this.element = element;
+        this.max_args_num = 5;
+        this.mode = 'dev';
         this.max_scan = 1;
         this.init();
+        // plugins system
+        this.plugins = [];
 
     }
-
+    log() {
+        if (this.mode !== 'dev') return;
+        for (let i=0;i < arguments.length && arguments.length <= this.max_args_num; i++) {
+            console.log('[BIT.JS]:',arguments[i])
+        }
+    }
     show_images(instance_elem, data) {
         var fr = new FileReader();
         fr.onload = function(){
@@ -50,38 +65,27 @@ class Bit extends EventEmitter {
         fr.readAsDataURL(data[0]);
     }
     init() {
-        let c = document.querySelectorAll('.bit');
-        let i, l;
-        //dom list
-        var d = [];
+        // hello !
         this.on('hello', data => {
-            console.log(c)
+            console.log('Hello World !')
+        });
+        this.emit('hello');
+
+        this.on('onChange', data => {
+            this.log(`some change on instance: ${this.id}`,data)
+        });
+        
+        // TODO: create a hidden input 
+        // TODO: a
+        this.element.addEventListener('change', () => {
+            let data = {}
+            data.files = this.element.files;
+            data.instance_id = this.id;
+            
+            
+            this.emit('onChange',data)
         });
 
-
-        this.emit('hello', c);
-        this.emit('hello', c);
-        this.emit('hello', c);
-        var bit = this;
-        if (c.length == 0) {
-            throw new Error("Can't find the containers for Bit");
-        }
-        for (i = 0; i < c.length; i++) {
-            // limit the loop
-            if (i == this.max_scan) {
-                console.log("[bit] max scanning instances reached");
-                return false;
-            } 
-            
-            var file_elem = c[i].querySelector('input[type=file]');
-            file_elem.onchange = function(event){
-                bit.show_images(this.parentElement,this.files)
-            }
-            c[i].Bit = this.init;
-            d.push(c[i]);
-            
-
-        }
     }
 
 
