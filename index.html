@@ -15,17 +15,16 @@
     <div class="container bg-white mt-5 p-5">
         <h1>Bit - Javascript Image Uploader</h1>
         <p>Author: Zain Ali</p>
-        <form method="post" enctype="multipart/form-data">
-            <input name="images" type="file" bit-instance multiple/>
-            <input type="submit" id="test-submit-btn" class="btn btn-primary btn-sm">
-        </form>
+        <div bit-instance>
+            
+        </div>
         <div mustache-render></div>
     </div>
 
 
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
-            const elem = document.querySelector('input[bit-instance]');
+            const elem = document.querySelector('div[bit-instance]');
             const bit = new Bit(elem);
             let demo_data = {
                 files_count: 0,
