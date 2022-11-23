@@ -8,6 +8,9 @@ bit is a mini javascript library that allows you to control the process of uploa
 - [ ] Use web-worker for reading files.
 - [ ] basic XHR upload func
 
+# current features:
+- [x] drag/drop files
+- [x] add additional data (object) to each file
 
 # TODO before the next major release:
 - [ ] Basic system of plugins
