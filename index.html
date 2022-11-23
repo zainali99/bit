@@ -26,6 +26,7 @@
         window.addEventListener('DOMContentLoaded', (event) => {
             const elem = document.querySelector('div[bit-instance]');
             const bit = new Bit(elem);
+            window.bit = bit;
             let demo_data = {
                 files_count: 0,
                 instance_id: null,
@@ -43,12 +44,9 @@
                 var rendered = Mustache.render(template, demo_data);
                 document.querySelector('div[mustache-render]').innerHTML = rendered;
             }
-            bit.on('onChange', data => {
-                demo_data.files_count = data.files.length;
-                demo_data.instance_id = data.instance_id;
-                renderToString();
-                console.log(demo_data)
-            });
+            bit.on('bit_item_click', data => console.log('a',data.element.file))
+            
+
             renderToString();
 
 
