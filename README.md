@@ -7,6 +7,7 @@ bit is a mini javascript library that allows you to control the process of uploa
 - [ ] Emit basic hooks: getFiles, etc
 - [ ] Use web-worker for reading files.
 - [ ] basic XHR upload func
+- [ ] basic validation hook
 
 # current features:
 - [x] drag/drop files
