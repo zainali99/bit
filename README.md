@@ -6,6 +6,7 @@ bit is a mini javascript library that allows you to control the process of uploa
 ### TODO before first release 1.0
 - [ ] Emit basic hooks: getFiles, etc
 - [ ] Use web-worker for reading files.
+- [ ] basic XHR upload func
 
 
 # TODO before the next major release:
@@ -13,3 +14,5 @@ bit is a mini javascript library that allows you to control the process of uploa
 
 # Documentation
 TODO
+
+used in euroingro.com
