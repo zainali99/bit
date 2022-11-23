@@ -278,7 +278,9 @@ class Bit extends EventEmitter {
         // let ins = this;
         console.log(this.files)
         for (var i=0; i<this.files.length;i++) {
-            if (!(this.files[i] instanceof File)) this.log('no file skipping'); continue;
+            if (!(this.files[i] instanceof File)) {
+                this.log('no file skipping'); continue;
+            }
             image_data.push({
                 key: this.files[i].token,
                 ...this.files[i].additional_data 
