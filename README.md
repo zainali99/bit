@@ -11,7 +11,7 @@ bit is a mini javascript library that allows you to control the process of uploa
 
 # current features:
 - [x] drag/drop files
-- [x] add additional data (object) to each file
+- [x] add additional data (object) to each file to send later with ajax requests. 
 
 # TODO before the next major release:
 - [ ] Basic system of plugins
