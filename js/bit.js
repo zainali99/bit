@@ -37,6 +37,8 @@ class Bit extends EventEmitter {
         this.version = "0.1";
         this.slogan = "";
         this.files = [];
+        this.upload_url = options.upload_url || '';
+        this.headers = options.headers || {};
         this.element = element;
         this.max_args_num = 5; // will deprecated
         this.mode = 'dev';
@@ -294,6 +296,18 @@ class Bit extends EventEmitter {
         }
         fd.append('image_data', JSON.stringify(image_data))
         return fd
+    }
+    upload() {
+        if (!this.upload_url) {
+            throw new Error('No upload url setted, create the instance with upload_url setted')
+        }
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', this.upload_url);
+        for (const key in this.headers) {
+            xhr.setRequestHeader(key, this.headers[key])
+        }
+        xhr.send(this.getFiles(true));
+
     }
       
 

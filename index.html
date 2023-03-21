@@ -25,7 +25,11 @@
     <script>
         window.addEventListener('DOMContentLoaded', (event) => {
             const elem = document.querySelector('div[bit-instance]');
-            const bit = new Bit(elem);
+            const bit = new Bit(elem, {
+                'headers': {
+                    'X-CSRFToken': 'test-bit-django'
+                },
+                'upload_url':'http://localhost:9000/test_upload'});
             window.bit = bit;
             let demo_data = {
                 files_count: 0,
