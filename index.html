@@ -45,7 +45,7 @@
                 document.querySelector('div[mustache-render]').innerHTML = rendered;
             }
             bit.on('bit_item_click', data => console.log('a',data.element.file))
-            
+            bit.on('delete', (data, resp) => console.log(data,resp))
 
             renderToString();
 

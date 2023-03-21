@@ -7,11 +7,11 @@ class EventEmitter {
         this.events = {};
     }
     //trigger the event and delete from the array
-    emit(eventName, data) {
+    emit(eventName, ...data) {
         let event = this.events[eventName];
         if (event) {
             event.forEach(fn => {
-                fn.call(null, data);
+                fn.call(null, ...data);
             });
             return;
         }
@@ -92,8 +92,12 @@ class Bit extends EventEmitter {
         };
         e.querySelector('.bit-delete-item-btn').onclick = function(ev) {
             ev.stopPropagation();
-            console.log(ev.target.parentNode)
-            ev.target.parentNode.remove()
+            const response = confirm(t.i18n.DELETE_FILE)
+            t.emit('delete', e, response)
+            if (response) {
+                e.remove()
+            } 
+            
         }
         this.element.appendChild(e)
 
@@ -150,7 +154,8 @@ class Bit extends EventEmitter {
         console.log(e.target.files)
         this.files = this.files.concat(...e.target.files)
         this.files.concat(e.target.files);
-        this.buildPreviews()
+        setTimeout(this.buildPreviews,0)
+        // this.buildPreviews()
 
     }
 
@@ -187,7 +192,7 @@ class Bit extends EventEmitter {
                 clearTimeout(timer);
                 this.emit('onChange')
             });
-        },50);
+        },0);
     }
     onDragOver(ev) {
         ev.preventDefault();
