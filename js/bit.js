@@ -56,7 +56,7 @@ class Bit extends EventEmitter {
 
             },
             'it': {
-                DRAG_AND_DROP_TEXT: 'Trascina i files per caricare...',
+                DRAG_AND_DROP_TEXT: 'Trascina i files o clicca per caricare...',
                 DELETE_FILE: 'cancella',
             }
         }
@@ -146,6 +146,10 @@ class Bit extends EventEmitter {
             const response = confirm(t.i18n.DELETE_FILE)
             t.emit('delete', e.file, response)
             if (response) {
+                const index = this.files.findIndex(i => i.token == e.file.token)
+                if (index > -1) {
+                    this.files.splice(index, 1)
+                }
                 e.remove()
             } 
             
@@ -240,7 +244,6 @@ class Bit extends EventEmitter {
     }
 
     buildPreviews = () => {
-        console.log('called ', this.files)
         let promises = [];
 
 
@@ -253,7 +256,7 @@ class Bit extends EventEmitter {
                         fr.onload = async function() {
                             var res = await fetch(fr.result)
                             res = await res.blob()
-                            console.log(res)
+                            file.uploaded = false;
                             file.src = URL.createObjectURL(res)
                             resolve()
                             
@@ -363,7 +366,7 @@ class Bit extends EventEmitter {
         });
         return update_count;
     }
-    getFiles(form_data=false, raise_error=false){
+    getFiles(form_data=false, raise_error=false,uploaded=false){
         if (!form_data) {
             return this.files;
         }
@@ -374,15 +377,16 @@ class Bit extends EventEmitter {
         // format key-value
         // each key contain a file information
         let image_data = []
-        for (var i=0; i<this.files.length;i++) {
-            if (!(this.files[i] instanceof File)) {
+        let files = this.files.filter(i => i.uploaded == uploaded)
+        for (var i=0; i<files.length;i++) {
+            if (!(files[i] instanceof File)) {
                 this.log('no file skipping'); continue;
             }
             image_data.push({
-                key: this.files[i].token,
-                ...this.files[i].additional_data 
+                key: files[i].token,
+                ...files[i].additional_data 
             })
-            fd.append(this.files[i].token,this.files[i])
+            fd.append(files[i].token,files[i])
         }
         fd.append('image_data', JSON.stringify(image_data))
         return fd
@@ -391,12 +395,31 @@ class Bit extends EventEmitter {
         if (!this.upload_url) {
             throw new Error('No upload url setted, create the instance with upload_url setted')
         }
-        const files = this.getFiles(form_data=true,raise_error=true);
+        const files = this.getFiles(true,true,false);
+
         let xhr = new XMLHttpRequest();
         xhr.open('POST', this.upload_url);
         for (const key in this.headers) {
             xhr.setRequestHeader(key, this.headers[key])
         }
+        xhr.onreadystatechange = () => {
+            // In local files, status is 0 upon success in Mozilla Firefox
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+              const status = xhr.status;
+              if (status === 0 || (status >= 200 && status < 400)) {
+                // The request has been completed successfully
+                console.log(xhr.responseText);
+                // change the status of files to already uploaded...
+                files = this.getFiles(false,false,false)
+                for (var i=0; i < files.length;i++) {
+                    files[i].uploaded = true;
+                }
+              } else {
+                // Oh no! There has been an error with the request!
+              }
+            }
+          };
+
         xhr.send(files);
 
     }
