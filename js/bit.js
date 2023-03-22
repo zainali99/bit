@@ -163,6 +163,7 @@ class Bit extends EventEmitter {
             this.createBitItem(i)
             i.index = index;
             i.already_parsed = true;
+            
         });
     }
     applyBasicCSS() {
@@ -273,6 +274,7 @@ class Bit extends EventEmitter {
                 this.show_images()
                 clearTimeout(timer);
                 this.emit('reading_finish')
+
             });
         },0);
     }
@@ -395,6 +397,7 @@ class Bit extends EventEmitter {
         if (!this.upload_url) {
             throw new Error('No upload url setted, create the instance with upload_url setted')
         }
+        this.rebuildIndexes();
         let files = this.getFiles(true,true,false);
 
         let xhr = new XMLHttpRequest();
