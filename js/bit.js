@@ -272,7 +272,7 @@ class Bit extends EventEmitter {
             await Promise.all(promises).then(() =>{
                 this.show_images()
                 clearTimeout(timer);
-                this.emit('onChange')
+                this.emit('reading_finish')
             });
         },0);
     }
