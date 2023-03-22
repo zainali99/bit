@@ -101,7 +101,6 @@ class Bit extends EventEmitter {
     }
     createBitItem(file){
         let e = document.createElement('div');
-        // check collission
         file.token = `${this.get_random_key()}-${this.get_random_key()}`;
         e.file = file;
         // preload using new Image maybe...
@@ -120,21 +119,24 @@ class Bit extends EventEmitter {
                 'element': e
             })
         };
+
         
         e.querySelector('.bit-sort-order-elements .bit-sort-order-left').addEventListener('click', (ev) => {
             ev.stopPropagation();
-            let blocco = ev.currentTarget.closest('.bit-core-item');
-            let position = blocco.file.index;
+            let item = ev.currentTarget.closest('.bit-core-item');
+            this.emit('sort_left', item)
+            let position = item.file.index;
             if (position > 0) {
-                t.element.insertBefore(blocco.previousElementSibling,undefined);
+                t.element.insertBefore(item.previousElementSibling,undefined);
             }
             this.rebuildIndexes();
         });
         e.querySelector('.bit-sort-order-elements .bit-sort-order-right').addEventListener('click', (ev) => {
             ev.stopPropagation();
-            let blocco = ev.currentTarget.closest('.bit-core-item');
-            if (!blocco.nextElementSibling) return;
-            t.element.insertBefore(blocco.nextElementSibling,blocco);
+            let item = ev.currentTarget.closest('.bit-core-item');
+            this.emit('sort_right', item)
+            if (!item.nextElementSibling) return;
+            t.element.insertBefore(item.nextElementSibling,item);
             this.rebuildIndexes();
         });
 
@@ -142,7 +144,7 @@ class Bit extends EventEmitter {
         e.querySelector('.bit-delete-item-btn').onclick = function(ev) {
             ev.stopPropagation();
             const response = confirm(t.i18n.DELETE_FILE)
-            t.emit('delete', e, response)
+            t.emit('delete', e.file, response)
             if (response) {
                 e.remove()
             } 
@@ -195,13 +197,12 @@ class Bit extends EventEmitter {
             margin-left:auto
         }
         #${this.id} .bit-delete-item-btn {
-            bottom: 0;
+            bottom: 5px;
             position: absolute;
             left: 46px;
             border-radius: 100%;
             padding: 6px;
             border: 0;
-            transform: scale(0.8);
             background: #ff5656;
             z-index:999;
         }
@@ -232,17 +233,16 @@ class Bit extends EventEmitter {
 
     }
     async onFileSelect(e){
-        console.log(e.target.files)
         this.files = this.files.concat(...e.target.files)
         this.files.concat(e.target.files);
         setTimeout(this.buildPreviews,0)
-        // this.buildPreviews()
 
     }
 
     buildPreviews = () => {
-        console.log('called ')
+        console.log('called ', this.files)
         let promises = [];
+
 
         const generateThumbs = async () => {
             for (var i=0; i<this.files.length;i++) {
@@ -402,6 +402,26 @@ class Bit extends EventEmitter {
     }
       
 
+    async addFiles(data) {
+        let t = this;
+        console.log(data)
+        for (var i=0; i < data.length; i++) {
+            await fetch(data[i].src)
+            .then(function (response) {
+                return response.blob()
+            })
+            .then(function (blob) {
+                // here the image is a blob
+                blob.name = 'name'+t.get_random_key()
+                const f = new File([blob], blob.name);
+                delete data[i]['src'];
+                f.additional_data = {...data[i]}
+                
+                t.files.push(f);
+            });
+        }
+        this.buildPreviews()
 
+    }
 
 }

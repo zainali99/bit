@@ -49,8 +49,14 @@
                 document.querySelector('div[mustache-render]').innerHTML = rendered;
             }
             bit.on('bit_item_click', data => console.log('a',data.element.file))
-            bit.on('delete', (data, resp) => console.log(data,resp))
-
+            bit.on('delete', (data,resp) => console.log(data,resp))
+            bit.on('sort_left', (element) => console.log(element.file))
+            bit.on('sort_right', (element) => console.log(element.file))
+            const db_files = [
+                {'src': 'https://images.pexels.com/photos/531767/pexels-photo-531767.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 'db_id': 300, 'sort_order': 2},
+                {'src': 'https://images.pexels.com/photos/46160/field-clouds-sky-earth-46160.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1', 'db_id': 100, 'sort_order': 1}
+            ]
+            bit.addFiles(db_files)
             renderToString();
 
 
