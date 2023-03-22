@@ -96,10 +96,8 @@ class Bit extends EventEmitter {
         let elems = this.element.querySelectorAll('.bit-core-item')
         elems.forEach((i, index) => {
             i.file.index = index;
-            const c = this.updateWithToken(i.file.token, {'sort_order': index})
-            console.log('up', c)
+            this.updateWithToken(i.file.token, {'sort_order': index})
         });
-        console.log(this.files)
     }
     createBitItem(file){
         let e = document.createElement('div');
@@ -116,24 +114,30 @@ class Bit extends EventEmitter {
         <button type="button" class="bit-delete-item-btn" data-token="${file.token}">${this.i18n.DELETE_ICON}</button>
         </div>`
         let t=this;
-        // e.onclick = function(ev) {
-        //     ev.stopPropagation()
-        //     t.emit('bit_item_click', {
-        //         'element': e
-        //     })
-        // };
+        e.onclick = function(ev) {
+            ev.stopPropagation()
+            t.emit('bit_item_click', {
+                'element': e
+            })
+        };
         
         e.querySelector('.bit-sort-order-elements .bit-sort-order-left').addEventListener('click', (ev) => {
             ev.stopPropagation();
-            let closest_dropzone = t.element;
             let blocco = ev.currentTarget.closest('.bit-core-item');
-            console.log(blocco)
             let position = blocco.file.index;
             if (position > 0) {
                 t.element.insertBefore(blocco.previousElementSibling,undefined);
             }
             this.rebuildIndexes();
         });
+        e.querySelector('.bit-sort-order-elements .bit-sort-order-right').addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            let blocco = ev.currentTarget.closest('.bit-core-item');
+            if (!blocco.nextElementSibling) return;
+            t.element.insertBefore(blocco.nextElementSibling,blocco);
+            this.rebuildIndexes();
+        });
+
 
         e.querySelector('.bit-delete-item-btn').onclick = function(ev) {
             ev.stopPropagation();
@@ -148,7 +152,6 @@ class Bit extends EventEmitter {
 
     }
     show_images() {
-        console.log(this.files)
         this.files.forEach((i, index) => {
             if (i.already_parsed) return;
             this.createBitItem(i)
@@ -242,10 +245,8 @@ class Bit extends EventEmitter {
         let promises = [];
 
         const generateThumbs = async () => {
-            console.log(this.files)
             for (var i=0; i<this.files.length;i++) {
                 let file = this.files[i];
-                console.log(file, typeof file)
                 promises.push(
                     new Promise((resolve) => {
                         let fr = new FileReader();
@@ -337,7 +338,6 @@ class Bit extends EventEmitter {
     }
     updateWithToken(token="",obj={}){
         let update_count = 0;
-        console.log(this.files)
         this.files.map((f, i) => {
             if (token && f.token == token) {
                 if (!f.additional_data) f.additional_data = {};
