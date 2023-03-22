@@ -395,7 +395,7 @@ class Bit extends EventEmitter {
         if (!this.upload_url) {
             throw new Error('No upload url setted, create the instance with upload_url setted')
         }
-        const files = this.getFiles(true,true,false);
+        let files = this.getFiles(true,true,false);
 
         let xhr = new XMLHttpRequest();
         xhr.open('POST', this.upload_url);
