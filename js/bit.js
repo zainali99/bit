@@ -52,16 +52,33 @@ class Bit extends EventEmitter {
         this.i18n_dict = {
             'en': {
                 DRAG_AND_DROP_TEXT: 'Drag/Drop your files for uploading...',
-                DELETE_FILE: 'delete'
+                DELETE_FILE: 'delete',
+
             },
             'it': {
-                DRAG_AND_DROP_TEXT: '',
+                DRAG_AND_DROP_TEXT: 'Trascina i files per caricare...',
                 DELETE_FILE: 'cancella',
-
             }
         }
+        this.icons = {
+            DELETE_ICON:`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+            <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+          </svg>`,
+            ARROW_LEFT:`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle-fill" viewBox="0 0 16 16">
+          <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zm3.5 7.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+        </svg>`,
+            ARROW_RIGHT: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right-circle-fill" viewBox="0 0 16 16">
+            <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+          </svg>`
 
-        this.i18n = this.get_i18n_dict()  
+        }
+
+        this.i18n = this.get_i18n_dict()
+        for (const key in this.icons) {
+            this.i18n[key] = this.icons[key]
+        }
+
         this.element.bit = this;
         this.init();
 
@@ -75,6 +92,15 @@ class Bit extends EventEmitter {
             console.log('[BIT.JS]:',arguments[i])
         }
     }
+    rebuildIndexes() {
+        let elems = this.element.querySelectorAll('.bit-core-item')
+        elems.forEach((i, index) => {
+            i.file.index = index;
+            const c = this.updateWithToken(i.file.token, {'sort_order': index})
+            console.log('up', c)
+        });
+        console.log(this.files)
+    }
     createBitItem(file){
         let e = document.createElement('div');
         // check collission
@@ -83,15 +109,32 @@ class Bit extends EventEmitter {
         // preload using new Image maybe...
         e.className = "bit-core-item";
         e.innerHTML = `<div class="bit-preview-wrapper" style="background-image:url('${file.src}')">
-        <button type="button" class="bit-delete-item-btn" data-token="${file.token}">${this.i18n.DELETE_FILE}</button>
+        <div class="bit-sort-order-elements">
+            <div class="bit-sort-order-left">${this.i18n.ARROW_LEFT}</div>
+            <div class="bit-sort-order-right">${this.i18n.ARROW_RIGHT}</div>
+        </div>
+        <button type="button" class="bit-delete-item-btn" data-token="${file.token}">${this.i18n.DELETE_ICON}</button>
         </div>`
         let t=this;
-        e.onclick = function(ev) {
-            ev.stopPropagation()
-            t.emit('bit_item_click', {
-                'element': e
-            })
-        };
+        // e.onclick = function(ev) {
+        //     ev.stopPropagation()
+        //     t.emit('bit_item_click', {
+        //         'element': e
+        //     })
+        // };
+        
+        e.querySelector('.bit-sort-order-elements .bit-sort-order-left').addEventListener('click', (ev) => {
+            ev.stopPropagation();
+            let closest_dropzone = t.element;
+            let blocco = ev.currentTarget.closest('.bit-core-item');
+            console.log(blocco)
+            let position = blocco.file.index;
+            if (position > 0) {
+                t.element.insertBefore(blocco.previousElementSibling,undefined);
+            }
+            this.rebuildIndexes();
+        });
+
         e.querySelector('.bit-delete-item-btn').onclick = function(ev) {
             ev.stopPropagation();
             const response = confirm(t.i18n.DELETE_FILE)
@@ -106,9 +149,10 @@ class Bit extends EventEmitter {
     }
     show_images() {
         console.log(this.files)
-        this.files.forEach(i => {
+        this.files.forEach((i, index) => {
             if (i.already_parsed) return;
             this.createBitItem(i)
+            i.index = index;
             i.already_parsed = true;
         });
     }
@@ -117,7 +161,7 @@ class Bit extends EventEmitter {
         <style>
         #${this.id} {border:2px dashed;padding:10px;margin:10px}
         #${this.id} .bit-core-item .bit-preview-wrapper {width: 100%;
-            height: 60px;cursor:pointer;
+            height: 60px;cursor:pointer; position:relative;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center center;
@@ -128,6 +172,38 @@ class Bit extends EventEmitter {
             margin: 10px;
             border: 1px solid;
 
+        }
+        #${this.id} .bit-sort-order-elements {
+            position: absolute;
+            top: 20px;
+            z-index: 400;
+            width: 120px;
+            display: flex;
+            color: #fff;
+        }
+        #${this.id} .bit-sort-order-elements div {
+            background: rgb(0 0 0 / 70%);
+            padding: 5px;
+        }
+        #${this.id} .bit-sort-order-elements div:active {
+            opacity:0.5;
+        }
+        #${this.id} .bit-sort-order-elements div:nth-child(2) {
+            margin-left:auto
+        }
+        #${this.id} .bit-delete-item-btn {
+            bottom: 0;
+            position: absolute;
+            left: 46px;
+            border-radius: 100%;
+            padding: 6px;
+            border: 0;
+            transform: scale(0.8);
+            background: #ff5656;
+            z-index:999;
+        }
+        #${this.id} .bit-delete-item-btn svg {
+            fill:#fff;
         }
         </style>
         `);
@@ -259,6 +335,19 @@ class Bit extends EventEmitter {
         })
         
     }
+    updateWithToken(token="",obj={}){
+        let update_count = 0;
+        console.log(this.files)
+        this.files.map((f, i) => {
+            if (token && f.token == token) {
+                if (!f.additional_data) f.additional_data = {};
+                f.additional_data = Object.assign(f.additional_data, obj)
+                update_count +=1
+                return f;
+            }
+        });
+        return update_count;
+    }
     update(token="", index=null,obj={}) {
         // not recommended to update with index.
         // TODO: improve performance
@@ -274,16 +363,17 @@ class Bit extends EventEmitter {
         });
         return update_count;
     }
-    getFiles(form_data=false){
+    getFiles(form_data=false, raise_error=false){
         if (!form_data) {
             return this.files;
+        }
+        if (!this.files.length && raise_error) {
+            throw new Error('no files')
         }
         var fd = new FormData();
         // format key-value
         // each key contain a file information
         let image_data = []
-        // let ins = this;
-        console.log(this.files)
         for (var i=0; i<this.files.length;i++) {
             if (!(this.files[i] instanceof File)) {
                 this.log('no file skipping'); continue;
@@ -301,12 +391,13 @@ class Bit extends EventEmitter {
         if (!this.upload_url) {
             throw new Error('No upload url setted, create the instance with upload_url setted')
         }
+        const files = this.getFiles(form_data=true,raise_error=true);
         let xhr = new XMLHttpRequest();
         xhr.open('POST', this.upload_url);
         for (const key in this.headers) {
             xhr.setRequestHeader(key, this.headers[key])
         }
-        xhr.send(this.getFiles(true));
+        xhr.send(files);
 
     }
       
