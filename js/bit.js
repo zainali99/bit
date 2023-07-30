@@ -141,7 +141,7 @@ class Bit extends EventEmitter {
         });
 
 
-        e.querySelector('.bit-delete-item-btn').onclick = function(ev) {
+        e.querySelector('.bit-delete-item-btn').onclick = (ev) => {
             ev.stopPropagation();
             const response = confirm(t.i18n.DELETE_FILE)
             t.emit('delete', e.file, response)
@@ -154,17 +154,29 @@ class Bit extends EventEmitter {
             } 
             
         }
-        this.element.appendChild(e)
+        this.element.appendChild(e);
+        this.rebuildIndexes();
 
     }
-    show_images() {
-        this.files.forEach((i, index) => {
-            if (i.already_parsed) return;
-            this.createBitItem(i)
-            i.index = index;
-            i.already_parsed = true;
-            
-        });
+    show_images(file) {
+        if (file) {
+            // single mode
+            this.createBitItem(file);
+            file.index = 1; //not important will rebuild it later.
+            file.already_parsed= true;
+        } else {
+            // standard
+            this.files.forEach((i, index) => {
+                if (i.already_parsed) return;
+                this.createBitItem(i)
+                i.index = index;
+                i.already_parsed = true;
+                
+            });
+        }
+
+
+
     }
     applyBasicCSS() {
         this.element.insertAdjacentHTML('afterend', `
@@ -240,6 +252,7 @@ class Bit extends EventEmitter {
     async onFileSelect(e){
         this.files = this.files.concat(...e.target.files)
         this.files.concat(e.target.files);
+        // FIXME: memory problems ?!?
         setTimeout(this.buildPreviews,0)
 
     }
@@ -249,8 +262,9 @@ class Bit extends EventEmitter {
 
 
         const generateThumbs = async () => {
-            for (var i=0; i<this.files.length;i++) {
-                let file = this.files[i];
+            let files = this.files.filter(i => !i.src)
+            for (var i=0; i<files.length;i++) {
+                let file = files[i];
                 promises.push(
                     new Promise((resolve) => {
                         let fr = new FileReader();
@@ -258,8 +272,9 @@ class Bit extends EventEmitter {
                             var res = await fetch(fr.result)
                             res = await res.blob()
                             file.uploaded = false;
+                            
                             file.src = URL.createObjectURL(res)
-                            resolve()
+                            resolve(file)
                             
                         };
                         fr.readAsDataURL(file);
@@ -270,12 +285,24 @@ class Bit extends EventEmitter {
         // TODO: improve this part ?!
         let timer =  setTimeout(async() => {
             generateThumbs();
-            await Promise.all(promises).then(() =>{
-                this.show_images()
-                clearTimeout(timer);
-                this.emit('reading_finish')
 
-            });
+
+            
+            promises.filter(async (prom) => {
+                await prom.then((file) => {
+                    this.show_images(file);
+                    clearTimeout(timer);
+                    // FIXME: call it when all reading finish
+                    this.emit('reading_finish')
+                })
+            })
+
+            // await Promise.all(promises).then(() =>{
+            //     this.show_images()
+            //     clearTimeout(timer);
+            //     this.emit('reading_finish')
+
+            // });
         },0);
     }
     onDragOver(ev) {
