@@ -1,3 +1,6 @@
+![image](https://github.com/zainali99/bit/assets/9899154/acffe6be-ee2d-40f7-88d3-138f1a06956c)
+
+
 # bit
 bit is a javascript image uploader
 # What is bit ?
