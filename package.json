@@ -1,0 +1,31 @@
+{
+  "name": "bit-image",
+  "version": "1.0.0",
+  "description": "bit-image is a javascript image uploader",
+  "main": "index.js",
+  "scripts": {
+    "test": "test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zainali99/bit.git"
+  },
+  "keywords": [
+    "drag",
+    "and",
+    "drop",
+    "file",
+    "upload",
+    "upload",
+    "image",
+    "upload",
+    "image",
+    "library"
+  ],
+  "author": "Zain Ali",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/zainali99/bit/issues"
+  },
+  "homepage": "https://github.com/zainali99/bit#readme"
+}
