@@ -83,7 +83,7 @@ class Bit extends EventEmitter {
 
     }
     get_random_key() {
-        return Math.random().toString(16).substring(2)
+        return Math.random().toString(16).substring(2) + new Date().valueOf();
     }
     log() {
         if (this.mode !== 'dev') return;
@@ -101,7 +101,7 @@ class Bit extends EventEmitter {
     createBitItem(file){
         let e = document.createElement('div');
         const file_type = file.type.replace('image/','')
-        file.token = `${this.get_random_key()}-${this.get_random_key()}.${file_type}`;
+        file.token = `bitimage-${this.get_random_key()}.${file_type}`;
         e.file = file;
         // preload using new Image maybe...
         e.className = "bit-core-item";
@@ -143,8 +143,9 @@ class Bit extends EventEmitter {
 
         e.querySelector('.bit-delete-item-btn').onclick = (ev) => {
             ev.stopPropagation();
-            const response = confirm(t.i18n.DELETE_FILE)
+            const response = (t.mode != "dev") ? confirm(t.i18n.DELETE_FILE) : true;
             t.emit('delete', e.file, response)
+        
             if (response) {
                 const index = this.files.findIndex(i => i.token == e.file.token)
                 if (index > -1) {
