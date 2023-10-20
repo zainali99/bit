@@ -4,28 +4,26 @@
   "description": "bit-image is a javascript image uploader",
   "main": "index.js",
   "scripts": {
-    "test": "test.js"
+    "test": "jest --verbose ./tests --env=jsdom"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zainali99/bit.git"
   },
   "keywords": [
-    "drag",
-    "and",
-    "drop",
-    "file",
-    "upload",
+    "drag and drop",
     "upload",
     "image",
-    "upload",
-    "image",
-    "library"
+    "file"
   ],
   "author": "Zain Ali",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/zainali99/bit/issues"
   },
-  "homepage": "https://github.com/zainali99/bit#readme"
+  "homepage": "https://github.com/zainali99/bit#readme",
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0"
+  }
 }

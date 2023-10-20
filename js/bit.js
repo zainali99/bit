@@ -33,7 +33,6 @@ class Bit extends EventEmitter {
     constructor(element, options={}) {
         super();
         this.id = `bit-${this.get_random_key()}`;
-        this.log(element)
         this.version = "0.1";
         this.slogan = "";
         this.files = [];
@@ -241,7 +240,6 @@ class Bit extends EventEmitter {
         });
         this.applyBasicCSS();
         this.element.setAttribute('id', this.id);
-        this.log(this.i18n)
         this.element.insertAdjacentHTML('beforeend', `<div>${this.i18n.DRAG_AND_DROP_TEXT}</div>`);
         this.setupHiddenInput();
         this.element.addEventListener('drop', this.onDrop, false)
@@ -309,11 +307,11 @@ class Bit extends EventEmitter {
         ev.preventDefault();
     }
     onDrop(ev){
-        console.log('File(s) dropped');
+        
 
         // Prevent default behavior (Prevent file from being opened)
         ev.preventDefault();
-        console.log('test',this.bit.version)
+        
         if (ev.dataTransfer.items) {
           // Use DataTransferItemList interface to access the file(s)
           [...ev.dataTransfer.items].forEach((item, i) => {
@@ -321,14 +319,14 @@ class Bit extends EventEmitter {
             if (item.kind === 'file') {
               const file = item.getAsFile();
               this.bit.files.push(file)
-              console.log(`… file[${i}].name = ${file.name}`);
+              
             }
           });
         } else {
           // Use DataTransfer interface to access the file(s)
           [...ev.dataTransfer.files].forEach((file, i) => {
             this.bit.files.push(file);
-            console.log(`… file[${i}].name = ${file.name}`);
+            
           });
         }
         this.bit.buildPreviews()
@@ -385,7 +383,7 @@ class Bit extends EventEmitter {
         // TODO: improve performance
         let update_count = 0;
         this.files = this.files.map((f, i) => {
-            console.log(f, i)
+            
             if ((token && f.token == token) || typeof index == "number" && i==index) {
                 if (!f.additional_data) f.additional_data = {};
                 f.additional_data = Object.assign(f.additional_data, obj)
@@ -438,7 +436,7 @@ class Bit extends EventEmitter {
               const status = xhr.status;
               if (status === 0 || (status >= 200 && status < 400)) {
                 // The request has been completed successfully
-                console.log(xhr.responseText);
+                
                 // change the status of files to already uploaded...
                 files = this.getFiles(false,false,false)
                 for (var i=0; i < files.length;i++) {
@@ -457,7 +455,7 @@ class Bit extends EventEmitter {
 
     async addFiles(data) {
         let t = this;
-        console.log(data)
+        
         for (var i=0; i < data.length; i++) {
             await fetch(data[i].src)
             .then(function (response) {
@@ -478,3 +476,6 @@ class Bit extends EventEmitter {
     }
 
 }
+
+
+module.exports = Bit;
