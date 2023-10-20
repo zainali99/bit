@@ -27,4 +27,29 @@ bit is a mini javascript library that allows you to control the process of uploa
 # Documentation
 TODO
 
+# Commands available
+### run test with:
+
+```
+yarn test
+```
+
+### launch static server with serve
+```
+yarn serve
+```
+
+### test uploading file with express server
+```
+yarn start
+
+```
+
+
+
+
+
+
+
+
 used in euroingro.com
