@@ -11,6 +11,8 @@ bit is a mini javascript library that allows you to control the process of uploa
 - [ ] Use web-worker for reading files.
 - [ ] basic validation hook
 - [ ] improve i18n system
+- [ ] read large file faster without crashing browser
+
 
 
 # current features:
