@@ -100,7 +100,8 @@ class Bit extends EventEmitter {
     }
     createBitItem(file){
         let e = document.createElement('div');
-        file.token = `${this.get_random_key()}-${this.get_random_key()}`;
+        const file_type = file.type.replace('image/','')
+        file.token = `${this.get_random_key()}-${this.get_random_key()}.${file_type}`;
         e.file = file;
         // preload using new Image maybe...
         e.className = "bit-core-item";
@@ -407,7 +408,7 @@ class Bit extends EventEmitter {
         let files = this.files.filter(i => i.uploaded == uploaded)
         for (var i=0; i<files.length;i++) {
             if (!(files[i] instanceof File)) {
-                this.log('no file skipping'); continue;
+                this.log('no file detected, skipping'); continue;
             }
             image_data.push({
                 key: files[i].token,
@@ -476,6 +477,7 @@ class Bit extends EventEmitter {
     }
 
 }
+if (typeof module == "object") {
+    module.exports = Bit;
 
-
-module.exports = Bit;
+}
