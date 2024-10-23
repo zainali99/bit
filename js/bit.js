@@ -22,7 +22,7 @@ class Bit extends EventEmitter {
         this.language = this.validateLanguage(options.language)
         this.fallBackLanguage = options.fallBackLanguage
         this.maxFiles = options.maxFiles || Infinity; // Set a default of infinity
-        this.friendlyName = options.friendlyName || this.id;
+        this.friendlyName = options.friendlyName || '';
 
         // plugins system
         this.plugins = [];
