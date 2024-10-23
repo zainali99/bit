@@ -22,6 +22,7 @@ class Bit extends EventEmitter {
         this.language = this.validateLanguage(options.language)
         this.fallBackLanguage = options.fallBackLanguage
         this.maxFiles = options.maxFiles || Infinity; // Set a default of infinity
+        this.friendlyName = options.friendlyName || this.id;
 
         // plugins system
         this.plugins = [];
@@ -51,6 +52,31 @@ class Bit extends EventEmitter {
         this.element.bit = this;
         this.init();
 
+    }
+    static getAllBitInstances() {
+        if (!Bit.cachedInstances) {
+            Bit.cachedInstances = [];
+            const elements = document.querySelectorAll('*');
+
+            for (const element of elements) {
+                const bitInstance = element.bit;
+                if (bitInstance instanceof Bit) {
+                    Bit.cachedInstances.push(bitInstance);
+                }
+            }
+        }
+
+        return Bit.cachedInstances;
+    }
+
+    static getBitInstanceByFriendlyName(friendlyName) {
+        for (const bitInstance of Bit.getAllBitInstances()) {
+            if (bitInstance.friendlyName === friendlyName) {
+                return bitInstance;
+            }
+        }
+
+        return null;
     }
     initI18N(){
         this.i18n_dict = {
