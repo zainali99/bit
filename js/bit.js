@@ -42,7 +42,10 @@ class Bit extends EventEmitter {
         this.max_args_num = 5; // will deprecated
         this.mode = 'dev';
         this.max_scan = 1;
-        this.language = options.language || 'en';
+        this.language = this.validateLanguage(options.language)
+        this.fallBackLanguage = options.fallBackLanguage
+        this.maxFiles = options.maxFiles || Infinity; // Set a default of infinity
+
         // plugins system
         this.plugins = [];
         this.DOM_IDS = {
@@ -81,6 +84,13 @@ class Bit extends EventEmitter {
         this.element.bit = this;
         this.init();
 
+    }
+    validateLanguage(language) {
+        if (!this.i18n_dict[language]) {
+            console.warn(`[BIT-0001]: Language '${language}' is not supported. Falling back to 'en'.`);
+            return this.fallBackLanguage || 'en';
+        }
+        return language;
     }
     get_random_key() {
         return Math.random().toString(16).substring(2) + new Date().valueOf();
@@ -250,6 +260,11 @@ class Bit extends EventEmitter {
 
     }
     async onFileSelect(e){
+        if (this.files.length + e.target.files.length > this.maxFiles) {
+            console.error('Maximum file limit reached.');
+            return;
+        }
+    
         this.files = this.files.concat(...e.target.files)
         this.files.concat(e.target.files);
         // FIXME: memory problems ?!?
