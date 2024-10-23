@@ -2,31 +2,7 @@
 EventEmitter based on: 
 https://netbasal.com/javascript-the-magic-behind-event-emitter-cce3abcbcef9
 */
-class EventEmitter {
-    constructor() {
-        this.events = {};
-    }
-    //trigger the event and delete from the array
-    emit(eventName, ...data) {
-        let event = this.events[eventName];
-        if (event) {
-            event.forEach(fn => {
-                fn.call(null, ...data);
-            });
-            return;
-        }
-       
-        this.log('[BIT-0000]: The Event you called:' + eventName + ' doesn\'t exist anymore, register it with: bit.on()');
-    }
-    //register the events
-    on(eventName, fn) {
-        if (!this.events[eventName]) {
-            this.events[eventName] = [];
-        }
-        this.events[eventName].push(fn);
-    }
-}
-
+class EventEmitter{constructor(){this.events={}}emit(t,...e){let s=this.events[t];if(s){s.forEach(t=>{t.call(null,...e)});return}this.log("[BIT-0000]: The Event you called:"+t+" doesn't exist anymore, register it with: bit.on()")}on(t,e){this.events[t]||(this.events[t]=[]),this.events[t].push(e)}}
 
 /* Bit created by Zain Ali */
 class Bit extends EventEmitter {
