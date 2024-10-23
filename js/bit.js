@@ -18,6 +18,7 @@ class Bit extends EventEmitter {
         this.max_args_num = 5; // will deprecated
         this.mode = 'dev';
         this.max_scan = 1;
+        this.initI18N();
         this.language = this.validateLanguage(options.language)
         this.fallBackLanguage = options.fallBackLanguage
         this.maxFiles = options.maxFiles || Infinity; // Set a default of infinity
@@ -27,17 +28,7 @@ class Bit extends EventEmitter {
         this.DOM_IDS = {
             'HIDDEN_INPUT': '#bit__hidden__input',
         };
-        this.i18n_dict = {
-            'en': {
-                DRAG_AND_DROP_TEXT: 'Drag/Drop your files for uploading...',
-                DELETE_FILE: 'delete',
 
-            },
-            'it': {
-                DRAG_AND_DROP_TEXT: 'Trascina i files o clicca per caricare...',
-                DELETE_FILE: 'cancella',
-            }
-        }
         this.icons = {
             DELETE_ICON:`<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
             <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
@@ -60,6 +51,19 @@ class Bit extends EventEmitter {
         this.element.bit = this;
         this.init();
 
+    }
+    initI18N(){
+        this.i18n_dict = {
+            'en': {
+                DRAG_AND_DROP_TEXT: 'Drag/Drop your files for uploading...',
+                DELETE_FILE: 'delete',
+
+            },
+            'it': {
+                DRAG_AND_DROP_TEXT: 'Trascina i files o clicca per caricare...',
+                DELETE_FILE: 'cancella',
+            }
+        }
     }
     validateLanguage(language) {
         if (!this.i18n_dict[language]) {
