@@ -293,7 +293,7 @@ class Bit extends EventEmitter {
                         fr.onload = async function() {
                             var res = await fetch(fr.result)
                             res = await res.blob()
-                            file.prop = file.prop ?? false;
+                            file.uploaded = file.uploaded ?? false;
                             
                             file.src = URL.createObjectURL(res)
                             resolve(file)
