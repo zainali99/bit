@@ -21,6 +21,7 @@ class Bit extends EventEmitter {
         this.initI18N();
         this.language = this.validateLanguage(options.language)
         this.fallBackLanguage = options.fallBackLanguage
+        this.fallBackAddedFileBlobType = options.fallBackAddedFileBlobType
         this.maxFiles = options.maxFiles || Infinity; // Set a default of infinity
         this.friendlyName = options.friendlyName || '';
 
@@ -487,7 +488,8 @@ class Bit extends EventEmitter {
             .then(function (blob) {
                 // here the image is a blob
                 blob.name = 'name'+t.get_random_key()
-                const f = new File([blob], blob.name);
+                var type = blob.type || t.fallBackAddedFileBlobType
+                const f = new File([blob], blob.name, {type:type});
                 delete data[i]['src'];
                 f.additional_data = {...data[i]}
                 
