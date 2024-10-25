@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bit Class Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: #333;
+        }
+        code {
+            background-color: #e8e8e8;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #e8e8e8;
+            padding: 10px;
+            border-radius: 4px;
+            overflow: auto;
+        }
+        .example {
+            background-color: #f1f1f1;
+            border-left: 4px solid #007BFF;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Bit Class Documentation</h1>
+
+<h2>Overview</h2>
+<p>
+    The <code>Bit</code> class is an event-driven JavaScript class that provides functionality for file uploads, 
+    drag-and-drop file management, and UI rendering for file previews. It uses the <code>EventEmitter</code> 
+    pattern to handle events and has built-in support for internationalization (i18n).
+</p>
+
+<h2>Dependencies</h2>
+<p>
+    This class extends the <code>EventEmitter</code> class, which handles event registration and triggering.
+</p>
+
+<h2>Constructor</h2>
+<h3><code>Bit(element, options = {})</code></h3>
+<ul>
+    <li><strong>Parameters:</strong></li>
+    <ul>
+        <li><code>element</code> (<strong>HTMLElement</strong>): The HTML element where the Bit instance will be initialized.</li>
+        <li><code>options</code> (<strong>Object</strong>): An optional configuration object containing:
+            <ul>
+                <li><code>upload_url</code> (<strong>string</strong>): The URL where files will be uploaded.</li>
+                <li><code>headers</code> (<strong>Object</strong>): Custom headers to be sent with the upload request.</li>
+                <li><code>maxFiles</code> (<strong>number</strong>): The maximum number of files that can be uploaded (default is <code>Infinity</code>).</li>
+                <li><code>friendlyName</code> (<strong>string</strong>): A friendly name for the instance.</li>
+                <li><code>language</code> (<strong>string</strong>): The language for internationalization.</li>
+                <li><code>fallBackLanguage</code> (<strong>string</strong>): Fallback language if the specified language is not supported.</li>
+                <li><code>fallBackAddedFileBlobType</code> (<strong>string</strong>): Fallback blob type for manually created files.</li>
+            </ul>
+        </li>
+    </ul>
+</ul>
+
+<h3>Example:</h3>
+<div class="example">
+    <pre><code>const bitInstance = new Bit(document.getElementById('upload-area'), {
+        upload_url: 'https://example.com/upload',
+        headers: { 'Authorization': 'Bearer token' },
+        maxFiles: 10,
+        friendlyName: 'My Upload Widget',
+        language: 'en'
+    });</code></pre>
+</div>
+
+<h2>Properties</h2>
+<ul>
+    <li><code>id</code>: A unique identifier for the Bit instance.</li>
+    <li><code>version</code>: The version of the Bit class.</li>
+    <li><code>files</code>: An array to store the files that have been added.</li>
+    <li><code>upload_url</code>: The URL to which files will be uploaded.</li>
+    <li><code>headers</code>: Custom headers for the upload request.</li>
+    <li><code>element</code>: The HTML element associated with this Bit instance.</li>
+    <li><code>max_args_num</code>: The maximum number of arguments that can be logged (for internal use).</li>
+    <li><code>mode</code>: The mode of the Bit instance, can be 'dev' or 'prod'.</li>
+    <li><code>maxFiles</code>: Maximum files allowed for upload.</li>
+    <li><code>friendlyName</code>: A user-friendly name for the instance.</li>
+    <li><code>language</code>: The current language setting.</li>
+    <li><code>fallBackLanguage</code>: Fallback language if the specified language is not supported.</li>
+    <li><code>DOM_IDS</code>: Object containing DOM element identifiers used within the instance.</li>
+    <li><code>icons</code>: Object containing SVG icons used in the UI.</li>
+    <li><code>i18n_dict</code>: Object for storing internationalization strings.</li>
+</ul>
+
+<h2>Methods</h2>
+
+<h3><code>init()</code></h3>
+<p>Initializes the Bit instance by setting up event listeners, applying CSS, and creating a hidden input for file selection.</p>
+
+<h3><code>applyBasicCSS()</code></h3>
+<p>Injects basic CSS styles into the document for the UI components of the Bit instance.</p>
+
+<h3><code>onFileSelect(e)</code></h3>
+<p>Handles the selection of files through the hidden input.</p>
+
+<h3><code>buildPreviews()</code></h3>
+<p>Generates previews for the selected files asynchronously.</p>
+
+<h3><code>onDragOver(ev)</code></h3>
+<p>Handles the drag-over event to allow file drops.</p>
+
+<h3><code>onDrop(ev)</code></h3>
+<p>Handles the drop event to capture files and add them to the instance.</p>
+
+<h3><code>createBitItem(file)</code></h3>
+<p>Creates a UI component for a file and appends it to the Bit element.</p>
+
+<h3><code>show_images(file)</code></h3>
+<p>Displays images in the UI. If a file is provided, only that file is displayed; otherwise, all files are shown.</p>
+
+<h3><code>getFiles(form_data = false, raise_error = false, uploaded = false)</code></h3>
+<p>Returns a <code>FormData</code> object containing the files added to the Bit instance.</p>
+<ul>
+    <li><strong>Parameters:</strong></li>
+    <ul>
+        <li><code>form_data</code> (<strong>boolean</strong>): If true, returns a <code>FormData</code> object; otherwise, returns the files array.</li>
+        <li><code>raise_error</code> (<strong>boolean</strong>): If true, throws an error if no files exist.</li>
+        <li><code>uploaded</code> (<strong>boolean</strong>): Filters files based on their upload status.</li>
+    </ul>
+</ul>
+
+<h3><code>upload()</code></h3>
+<p>Uploads the files to the specified <code>upload_url</code> using an XMLHttpRequest.</p>
+
+<h3><code>addFiles(data)</code></h3>
+<p>Adds files to the Bit instance from an array of data objects.</p>
+<ul>
+    <li><strong>Parameters:</strong></li>
+    <ul>
+        <li><code>data</code> (<strong>Array</strong>): An array of objects representing files to be added.</li>
+    </ul>
+</ul>
+
+<h3><code>update(token = "", index = null, obj = {})</code></h3>
+<p>Updates the properties of a file identified by its token or index.</p>
+<ul>
+    <li><strong>Parameters:</strong></li>
+    <ul>
+        <li><code>token</code> (<strong>string</strong>): The token of the file to update.</li>
+        <li><code>index</code> (<strong>number</strong>): The index of the file to update (optional).</li>
+        <li><code>obj</code> (<strong>Object</strong>): An object containing updated properties for the file.</li>
+    </ul>
+</ul>
+
+<h2>Example Usage of Methods</h2>
+<h3>Using the upload method</h3>
+<div class="example">
+    <pre><code>bitInstance.upload();</code></pre>
+</div>
+
+<h3>Getting files as FormData</h3>
+<div class="example">
+    <pre><code>const formData = bitInstance.getFiles(true);</code></pre>
+</div>
+
+<h3>Updating a file</h3>
+<div class="example">
+    <pre><code>bitInstance.update('file-token', null, { name: 'New File Name' });</code></pre>
+</div>
+
+</body>
+</html>

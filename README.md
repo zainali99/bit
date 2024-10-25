@@ -27,7 +27,7 @@ bit is a mini javascript library that allows you to control the process of uploa
 - [ ] Basic system of plugins
 
 # Documentation
-TODO
+See [docs.html](blob/master/docs.html)
 
 # Commands available
 ### run test with:

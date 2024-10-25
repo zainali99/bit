@@ -492,8 +492,10 @@ class Bit extends EventEmitter {
                 blob.name = `name${t.get_random_key()}.${extension}`;
                 const f = new File([blob], blob.name, {type:type});
                 delete data[i]['src'];
+                delete data[i]['uploaded']
                 f.additional_data = {...data[i]}
-                
+                // Set uploaded to true for manually created files
+                f.uploaded = data.uploaded || false; // <-- Add this line
                 t.files.push(f);
             });
         }
