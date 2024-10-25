@@ -420,17 +420,17 @@ class Bit extends EventEmitter {
         return update_count;
     }
     getFiles(form_data=false, raise_error=false,uploaded=false){
+        let files = this.files.filter(i => i.uploaded === uploaded)
         if (!form_data) {
-            return this.files;
+            return files;
         }
-        if (!this.files.length && raise_error) {
+        if (!files.length && raise_error) {
             throw new Error('no files')
         }
         var fd = new FormData();
         // format key-value
         // each key contain a file information
         let image_data = []
-        let files = this.files.filter(i => i.uploaded === uploaded)
         for (var i=0; i<files.length;i++) {
             if (!(files[i] instanceof File)) {
                 this.log('no file detected, skipping'); continue;
