@@ -1,11 +1,7 @@
 ![image](https://github.com/zainali99/bit/assets/9899154/acffe6be-ee2d-40f7-88d3-138f1a06956c)
 
-
-# bit
-bit is a javascript image uploader
 # What is bit ?
-bit is a mini javascript library that allows you to control the process of uploading and viewing images in a web-app
-
+The Bit class is an event-driven JavaScript class that provides functionality for file uploads, drag-and-drop file management, and UI rendering for file previews. It uses the EventEmitter pattern to handle events and has built-in support for internationalization (i18n).
 ### TODO before first release 1.0
 
 - [ ] Use web-worker for reading files.
