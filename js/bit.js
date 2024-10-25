@@ -430,7 +430,7 @@ class Bit extends EventEmitter {
         // format key-value
         // each key contain a file information
         let image_data = []
-        let files = this.files.filter(i => i.uploaded == uploaded)
+        let files = this.files.filter(i => i.uploaded === uploaded)
         for (var i=0; i<files.length;i++) {
             if (!(files[i] instanceof File)) {
                 this.log('no file detected, skipping'); continue;
