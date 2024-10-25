@@ -293,7 +293,9 @@ class Bit extends EventEmitter {
                         fr.onload = async function() {
                             var res = await fetch(fr.result)
                             res = await res.blob()
-                            file.uploaded = file.uploaded ?? false;
+                            if (!file.hasOwnProperty('uploaded')) {
+                                file.uploaded  = false;
+                            }
                             
                             file.src = URL.createObjectURL(res)
                             resolve(file)
@@ -492,7 +494,7 @@ class Bit extends EventEmitter {
                 blob.name = `name${t.get_random_key()}.${extension}`;
                 const f = new File([blob], blob.name, {type:type});
                 delete data[i]['src'];
-                f.uploaded = data.uploaded || false; // <-- Add this line
+                f.uploaded = data.uploaded; // <-- Add this line
                 delete data[i]['uploaded']
                 f.additional_data = {...data[i]}
                 // Set uploaded to true for manually created files
