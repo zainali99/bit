@@ -487,8 +487,9 @@ class Bit extends EventEmitter {
             })
             .then(function (blob) {
                 // here the image is a blob
-                blob.name = 'name'+t.get_random_key()
                 var type = blob.type || t.fallBackAddedFileBlobType
+                const extension = type.split('/')[1] || 'png'; // Default    
+                blob.name = `name${t.get_random_key()}.${extension}`;
                 const f = new File([blob], blob.name, {type:type});
                 delete data[i]['src'];
                 f.additional_data = {...data[i]}
