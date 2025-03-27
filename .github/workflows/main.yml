@@ -3,7 +3,7 @@ name: Auto PR from Feature Branch
 on:
   push:
     branches:
-      - 'feature-branch'  # Replace with your specific branch name
+      - 'feature-branch'  # Replace with your desired branch name
 
 jobs:
   create-pull-request:
@@ -12,21 +12,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Check for existing PR
-        id: check-pr
-        run: |
-          PR_COUNT=$(gh pr list --base master --head feature-branch --state open --json number | jq length)
-          echo "PR_COUNT: $PR_COUNT"
-          if [[ "$PR_COUNT" -gt 0 ]]; then
-            echo "pr_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "pr_exists=false" >> $GITHUB_OUTPUT
-          fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Pull Request
-        if: steps.check-pr.outputs.pr_exists == 'false'
         uses: peter-evans/create-pull-request@v6
         with:
           base: master
