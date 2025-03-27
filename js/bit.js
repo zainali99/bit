@@ -1,5 +1,5 @@
 /* 
-test
+
 EventEmitter based on: 
 https://netbasal.com/javascript-the-magic-behind-event-emitter-cce3abcbcef9
 */
