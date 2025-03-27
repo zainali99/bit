@@ -12,14 +12,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Debug GitHub Context
+        run: echo "Branch: ${{ github.ref }}"
+
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v6
-        with:
-          base: master
-          branch: feature-branch
-          title: 'Auto PR from feature-branch'
-          body: 'This PR is automatically created from `feature-branch` to master.'
-          labels: 'automated-pr'
-          draft: false
+        run: |
+          gh pr create --base master --head feature-branch --title "Auto PR from feature-branch" --body "This PR is automatically created from \`feature-branch\` to master."
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
