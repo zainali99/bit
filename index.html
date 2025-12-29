@@ -12,13 +12,13 @@
 
 <body class="bg-dark">
 
-    <div class="container bg-white mt-5 p-5">
+    <div class="container">
         <h1>Bit - Javascript Image Uploader</h1>
-        <p>Author: Zain Ali - <a href="https://github.com/zainali99/bit">Github</a></p>
-        <div bit-instance>
-            
+        <p>Author: Zain Ali - <a href="https://github.com/zainali99/bit">GitHub</a></p>
+        <div bit-instance></div>
+        <div class="text-center">
+            <button type="button" id="upload">Upload Images</button>
         </div>
-        <button type="button" id="upload">Upload</button>
         <div mustache-render></div>
     </div>
 
@@ -61,6 +61,7 @@
             document.querySelector('#upload').addEventListener('click', () => {
                 bit.upload()
             })
+            bit.on('sort', (data) => console.log('Item moved:', data.moved.file, 'Position:', data.position))
 
 
         });
