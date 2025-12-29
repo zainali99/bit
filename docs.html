@@ -104,32 +104,69 @@
 
 <h2>Methods</h2>
 
+
 <h3><code>init()</code></h3>
-<p>Initializes the Bit instance by setting up event listeners, applying CSS, and creating a hidden input for file selection.</p>
+<p>Initializes the Bit instance, sets up drag-and-drop, hidden file input, and event listeners. Also injects UI text and prepares the element for file management.</p>
 
 <h3><code>applyBasicCSS()</code></h3>
-<p>Injects basic CSS styles into the document for the UI components of the Bit instance.</p>
+<p>Reserved for injecting basic CSS styles for Bit UI components (currently empty).</p>
 
 <h3><code>onFileSelect(e)</code></h3>
-<p>Handles the selection of files through the hidden input.</p>
+<p>Handles file selection from the hidden input, adds files to the instance, and triggers preview generation.</p>
 
 <h3><code>buildPreviews()</code></h3>
-<p>Generates previews for the selected files asynchronously.</p>
+<p>Asynchronously generates image previews for newly added files using FileReader and fetch APIs.</p>
 
 <h3><code>onDragOver(ev)</code></h3>
-<p>Handles the drag-over event to allow file drops.</p>
+<p>Prevents default drag-over behavior to allow file drops and sets drop effect.</p>
 
 <h3><code>onDrop(ev)</code></h3>
-<p>Handles the drop event to capture files and add them to the instance.</p>
+<p>Handles drop events, adds dropped files to the instance, and triggers preview generation.</p>
 
 <h3><code>createBitItem(file)</code></h3>
-<p>Creates a UI component for a file and appends it to the Bit element.</p>
+<p>Creates a draggable UI component for a file, including preview, edit, and delete buttons. Supports drag-and-drop sorting and file actions.</p>
 
 <h3><code>show_images(file)</code></h3>
-<p>Displays images in the UI. If a file is provided, only that file is displayed; otherwise, all files are shown.</p>
+<p>Displays image previews for files. If a file is provided, only that file is shown; otherwise, all files are rendered.</p>
+
+<h3><code>showModal(src)</code></h3>
+<p>Displays a modal with a full-size image preview. Includes close button and Escape key support.</p>
+
+<h3><code>openEditor(file)</code></h3>
+<p>Opens the image editor modal for a file, allowing cropping, filters (brightness, contrast, saturation, blur), and zoom. Changes are applied to the preview.</p>
+
+<h3><code>createEditor()</code></h3>
+<p>Creates the image editor modal and sets up controls for editing images (crop, filters, zoom, apply/cancel).</p>
+
+<h3><code>setupEditorControls(editor)</code></h3>
+<p>Initializes all editor controls, including crop overlay, filter sliders, zoom, drag/resize crop, and apply/cancel actions.</p>
+
+<h3><code>resetFilters()</code></h3>
+<p>Resets all image editor filters and zoom to their default values.</p>
+
+<h3><code>rebuildIndexes()</code></h3>
+<p>Updates file indexes and sort order after drag-and-drop sorting.</p>
+
+<h3><code>showDropIndicator(targetItem)</code></h3>
+<p>Highlights the target item during drag-and-drop sorting.</p>
+
+<h3><code>clearDropIndicators()</code></h3>
+<p>Removes drag-over highlight classes from all items.</p>
+
+<h3><code>setupHiddenInput()</code></h3>
+<p>Creates a hidden file input for selecting files and binds click events to open it.</p>
+
+<h3><code>getThumbnail(file)</code></h3>
+<p>Returns a data URL thumbnail for a file using FileReader.</p>
+
+<h3><code>updateWithToken(token, obj)</code></h3>
+<p>Updates additional data for a file identified by its token.</p>
+
+<h3><code>update(token = "", index = null, obj = {})</code></h3>
+<p>Updates additional data for a file by token or index.</p>
 
 <h3><code>getFiles(form_data = false, raise_error = false, uploaded = false)</code></h3>
-<p>Returns a <code>FormData</code> object containing the files added to the Bit instance.</p>
+<p>Returns either an array of files or a <code>FormData</code> object containing files and metadata. Filters by upload status.</p>
 <ul>
     <li><strong>Parameters:</strong></li>
     <ul>
@@ -140,29 +177,25 @@
 </ul>
 
 <h3><code>upload()</code></h3>
-<p>Uploads the files to the specified <code>upload_url</code> using an XMLHttpRequest.</p>
+<p>Uploads files to the specified <code>upload_url</code> using XMLHttpRequest. Sets custom headers and updates file upload status on success.</p>
 
 <h3><code>addFiles(data)</code></h3>
-<p>Adds files to the Bit instance from an array of data objects.</p>
+<p>Adds files to the Bit instance from an array of data objects (with <code>src</code> and metadata), fetches blobs, and triggers preview generation.</p>
 <ul>
     <li><strong>Parameters:</strong></li>
     <ul>
-        <li><code>data</code> (<strong>Array</strong>): An array of objects representing files to be added.</li>
+        <li><code>data</code> (<strong>Array</strong>): Array of objects representing files to be added.</li>
     </ul>
 </ul>
 
-<h3><code>update(token = "", index = null, obj = {})</code></h3>
-<p>Updates the properties of a file identified by its token or index.</p>
-<ul>
-    <li><strong>Parameters:</strong></li>
-    <ul>
-        <li><code>token</code> (<strong>string</strong>): The token of the file to update.</li>
-        <li><code>index</code> (<strong>number</strong>): The index of the file to update (optional).</li>
-        <li><code>obj</code> (<strong>Object</strong>): An object containing updated properties for the file.</li>
-    </ul>
-</ul>
+<h3><code>getAllBitInstances()</code> <span style="font-size:0.9em; color:#888;">(static)</span></h3>
+<p>Returns all Bit instances attached to DOM elements.</p>
+
+<h3><code>getBitInstanceByFriendlyName(friendlyName)</code> <span style="font-size:0.9em; color:#888;">(static)</span></h3>
+<p>Returns a Bit instance by its friendly name.</p>
 
 <h2>Example Usage of Methods</h2>
+
 <h3>Using the upload method</h3>
 <div class="example">
     <pre><code>bitInstance.upload();</code></pre>
@@ -173,9 +206,19 @@
     <pre><code>const formData = bitInstance.getFiles(true);</code></pre>
 </div>
 
-<h3>Updating a file</h3>
+<h3>Updating a file's metadata</h3>
 <div class="example">
     <pre><code>bitInstance.update('file-token', null, { name: 'New File Name' });</code></pre>
+</div>
+
+<h3>Opening the image editor</h3>
+<div class="example">
+    <pre><code>bitInstance.openEditor(bitInstance.files[0]);</code></pre>
+</div>
+
+<h3>Drag-and-drop sorting</h3>
+<div class="example">
+    <pre><code>// Drag file previews to reorder them in the UI</code></pre>
 </div>
 
 </body>
